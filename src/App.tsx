@@ -115,6 +115,23 @@ const getFinalChoices = (finals: FinalsBySet, ratings: RatingsBySet) =>
     }),
   );
 
+const autoSelectSingleLikedChoices = (state: PlannerState): PlannerState => {
+  let changed = false;
+  const nextFinals = { ...state.finals };
+
+  for (const set of choiceSets) {
+    if (isFinalChoiceValid(set, state.ratings, nextFinals)) continue;
+
+    const likedOptions = getLikedOptions(set, state.ratings);
+    if (likedOptions.length === 1) {
+      nextFinals[set.id] = likedOptions[0].id;
+      changed = true;
+    }
+  }
+
+  return changed ? { ...state, finals: nextFinals } : state;
+};
+
 const optionIcon = (kind: ChoiceOption["kind"]) => {
   if (kind === "reading") return <BookOpen aria-hidden="true" />;
   if (kind === "psalm") return <Music2 aria-hidden="true" />;
@@ -236,6 +253,11 @@ function App() {
     }));
   };
 
+  const showSummary = () => {
+    updateState(autoSelectSingleLikedChoices);
+    setActiveIndex(choiceSets.length);
+  };
+
   const resetAll = () => {
     window.localStorage.removeItem(STORAGE_KEY);
     setPlannerState(defaultState);
@@ -335,7 +357,7 @@ function App() {
 
           <button
             className={`step-button summary ${isSummary ? "active" : ""}`}
-            onClick={() => setActiveIndex(choiceSets.length)}
+            onClick={showSummary}
           >
             <span className="step-status">{choiceSets.length + 1}</span>
             <span>
@@ -423,9 +445,12 @@ function App() {
               <button
                 className="primary-button"
                 onClick={() => {
-                  setActiveIndex((index) =>
-                    Math.min(choiceSets.length, index + 1),
-                  );
+                  if (activeIndex === choiceSets.length - 1) {
+                    showSummary();
+                    return;
+                  }
+
+                  setActiveIndex((index) => index + 1);
                 }}
               >
                 {activeIndex === choiceSets.length - 1 ? "Summary" : "Next"}
