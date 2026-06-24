@@ -123,6 +123,16 @@ button:disabled {
   flex: 0 0 auto;
 }
 
+.spinner-icon {
+  animation: spin 0.85s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .planner-layout {
   display: grid;
   grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
@@ -415,6 +425,25 @@ button:disabled {
   background: rgba(184, 137, 47, 0.12);
   color: #5f4518;
   padding: 0.85rem 1rem;
+}
+
+.loading-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(31, 111, 131, 0.24);
+  border-radius: 8px;
+  background: rgba(31, 111, 131, 0.08);
+  color: #185a6b;
+  padding: 0.85rem 1rem;
+  font-weight: 700;
+}
+
+.loading-banner svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
 }
 
 .summary-list {

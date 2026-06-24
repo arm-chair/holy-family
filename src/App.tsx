@@ -7,6 +7,7 @@ import {
   ClipboardCopy,
   ExternalLink,
   Heart,
+  LoaderCircle,
   Music2,
   RefreshCw,
   Send,
@@ -613,6 +614,7 @@ function SummaryView({
               void onSubmitVotes();
             }}
             disabled={!canSubmit || voteSubmitStatus === "submitting"}
+            aria-busy={voteSubmitStatus === "submitting"}
             title={
               canSubmit
                 ? "Submit final choices"
@@ -621,7 +623,11 @@ function SummaryView({
                   : "Vote submission is not configured yet"
             }
           >
-            <Send aria-hidden="true" />
+            {voteSubmitStatus === "submitting" ? (
+              <LoaderCircle className="spinner-icon" aria-hidden="true" />
+            ) : (
+              <Send aria-hidden="true" />
+            )}
             {submitLabel}
           </button>
           <button
@@ -640,6 +646,13 @@ function SummaryView({
         <div className="missing-banner">
           Vote submission is not configured yet. Add the Apps Script web-app URL
           to <strong>public/votes-config.json</strong>.
+        </div>
+      ) : null}
+
+      {voteConfigStatus === "loading" ? (
+        <div className="loading-banner" role="status">
+          <LoaderCircle className="spinner-icon" aria-hidden="true" />
+          Connecting to the vote sheet.
         </div>
       ) : null}
 
@@ -744,11 +757,23 @@ function VotesView({
             void onRefresh();
           }}
           disabled={configStatus !== "ready" || status === "loading"}
+          aria-busy={status === "loading"}
         >
-          <RefreshCw aria-hidden="true" />
-          Refresh
+          {status === "loading" ? (
+            <LoaderCircle className="spinner-icon" aria-hidden="true" />
+          ) : (
+            <RefreshCw aria-hidden="true" />
+          )}
+          {status === "loading" ? "Refreshing" : "Refresh"}
         </button>
       </div>
+
+      {configStatus === "loading" ? (
+        <div className="loading-banner" role="status">
+          <LoaderCircle className="spinner-icon" aria-hidden="true" />
+          Connecting to the vote sheet.
+        </div>
+      ) : null}
 
       {configStatus === "missing" ? (
         <div className="missing-banner">
@@ -764,7 +789,8 @@ function VotesView({
       ) : null}
 
       {status === "loading" ? (
-        <div className="missing-banner">
+        <div className="loading-banner" role="status">
+          <LoaderCircle className="spinner-icon" aria-hidden="true" />
           {message || "Loading submitted votes."}
         </div>
       ) : null}
