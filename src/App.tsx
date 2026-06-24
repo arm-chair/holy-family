@@ -253,15 +253,22 @@ function App() {
     }));
   };
 
+  const goToStep = (index: number) => {
+    setActiveIndex(index);
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  };
+
   const showSummary = () => {
     updateState(autoSelectSingleLikedChoices);
-    setActiveIndex(choiceSets.length);
+    goToStep(choiceSets.length);
   };
 
   const resetAll = () => {
     window.localStorage.removeItem(STORAGE_KEY);
     setPlannerState(defaultState);
-    setActiveIndex(0);
+    goToStep(0);
     setCopyStatus("");
   };
 
@@ -299,7 +306,7 @@ function App() {
       setVoteSubmitStatus("submitted");
       setVoteLoadStatus("loading");
       setVoteMessage("Submitted. Loading the latest votes.");
-      setActiveIndex(choiceSets.length + 1);
+      goToStep(choiceSets.length + 1);
       window.setTimeout(() => setVoteSubmitStatus("idle"), 2500);
       window.setTimeout(() => {
         void refreshVotes();
@@ -342,7 +349,7 @@ function App() {
               <button
                 className={`step-button ${isActive ? "active" : ""}`}
                 key={set.id}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => goToStep(index)}
               >
                 <span className="step-status">
                   {isComplete ? <Check aria-hidden="true" /> : index + 1}
@@ -369,7 +376,7 @@ function App() {
           <button
             className={`step-button summary ${isVotes ? "active" : ""}`}
             onClick={() => {
-              setActiveIndex(choiceSets.length + 1);
+              goToStep(choiceSets.length + 1);
               void refreshVotes();
             }}
           >
@@ -389,7 +396,7 @@ function App() {
             onFinalChange={setFinal}
             onCopy={copySummary}
             onShowVotes={() => {
-              setActiveIndex(choiceSets.length + 1);
+              goToStep(choiceSets.length + 1);
               void refreshVotes();
             }}
             onSubmitVotes={submitFinalVotes}
@@ -437,7 +444,7 @@ function App() {
               <button
                 className="secondary-button"
                 disabled={activeIndex === 0}
-                onClick={() => setActiveIndex((index) => Math.max(0, index - 1))}
+                onClick={() => goToStep(Math.max(0, activeIndex - 1))}
               >
                 <ChevronLeft aria-hidden="true" />
                 Previous
@@ -450,7 +457,7 @@ function App() {
                     return;
                   }
 
-                  setActiveIndex((index) => index + 1);
+                  goToStep(activeIndex + 1);
                 }}
               >
                 {activeIndex === choiceSets.length - 1 ? "Summary" : "Next"}
