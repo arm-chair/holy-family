@@ -41,8 +41,6 @@ export const submitVote = async (
   const body = JSON.stringify(payload);
   const blob = new Blob([body], { type: "text/plain;charset=UTF-8" });
 
-  if (window.navigator.sendBeacon?.(endpoint, blob)) return;
-
   await fetch(endpoint, {
     method: "POST",
     mode: "no-cors",
