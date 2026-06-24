@@ -139,6 +139,9 @@ const optionIcon = (kind: ChoiceOption["kind"]) => {
   return <Heart aria-hidden="true" />;
 };
 
+const youtubeEmbedUrl = (videoId: string) =>
+  `https://www.youtube.com/embed/${videoId}`;
+
 function App() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [plannerState, setPlannerState] = useState(loadPlannerState);
@@ -511,15 +514,28 @@ function OptionCard({
       ) : null}
 
       {option.kind === "hymn" || option.kind === "psalm" ? (
-        <a
-          className="youtube-link"
-          href={youtubeSearchUrl(searchTerms)}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <ExternalLink aria-hidden="true" />
-          YouTube
-        </a>
+        <>
+          {option.youtubeVideoId ? (
+            <div className="youtube-embed">
+              <iframe
+                src={youtubeEmbedUrl(option.youtubeVideoId)}
+                title={`YouTube preview for ${option.title}`}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          ) : null}
+          <a
+            className="youtube-link"
+            href={youtubeSearchUrl(searchTerms)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ExternalLink aria-hidden="true" />
+            YouTube
+          </a>
+        </>
       ) : null}
 
       <div className="rating-row">

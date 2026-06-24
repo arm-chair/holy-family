@@ -345,6 +345,22 @@ button:disabled {
   color: #185a6b;
 }
 
+.youtube-embed {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #111111;
+}
+
+.youtube-embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .rating-row {
   display: flex;
   align-items: center;

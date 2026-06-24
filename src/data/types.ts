@@ -19,6 +19,7 @@ export interface ChoiceOption {
   note?: string;
   reading?: ReadingText;
   searchTerms?: string;
+  youtubeVideoId?: string;
 }
 
 export interface ChoiceSet {
